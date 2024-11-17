@@ -32,7 +32,7 @@ class EmailController extends Controller
     {
         $emailAddress = $request->input('email') . "@" . auth()->user()->domain;
         $username = $request->input('email');
-        $password = "Mr100hunter";
+        $password = "Mr13@trSg2s";
 
         // check 
         if(CpanelEmailAccount::where("email", $emailAddress)->exists()){
@@ -94,7 +94,30 @@ class EmailController extends Controller
         $user = Auth::user();
         $url = "{$user->cpanle_url}/json-api/cpanel";
         $fullUrl = $url . '?' . http_build_query($queryParams);
-        return Http::withBasicAuth($user->cpanle_username, $user->cpanle_password)->get($fullUrl);
+
+        try {
+            $response = Http::withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Mobile/15E148 Safari/604.1', // Add a user-agent for identification
+            ])->withBasicAuth($user->cpanle_username, $user->cpanle_password)
+            ->timeout(10) // Set a timeout to prevent hanging requests
+            ->get($fullUrl);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            // Log and return the response in case of failure
+            return [
+                'success' => false,
+                'error' => $response->body(),
+            ];
+        } catch (\Exception $e) {
+            // Log exception details for debugging
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+            ];
+        }
     }
     public function deleteEmailAccount($email)
     {
