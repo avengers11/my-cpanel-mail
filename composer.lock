@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfe12996eeecb6fdc8713a9fd9d431f8",
+    "content-hash": "eec75c5a84333742d0229d5f9fb28be6",
     "packages": [
         {
             "name": "brick/math",
@@ -5606,6 +5606,64 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "zanysoft/cpanel-api",
+            "version": "v3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zanysoft/cpanel-api.git",
+                "reference": "66468a2b8d9f8e359fe4ff0c9810aaf3f0601a51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zanysoft/cpanel-api/zipball/66468a2b8d9f8e359fe4ff0c9810aaf3f0601a51",
+                "reference": "66468a2b8d9f8e359fe4ff0c9810aaf3f0601a51",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^6.0 |^7.0|^8.0|^9.0|^10.0",
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ZanySoft\\Cpanel\\CpanelServiceProvider"
+                    ],
+                    "aliases": {
+                        "Cpanel": "ZanySoft\\Cpanel\\Facades\\Cpanel"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ZanySoft\\Cpanel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Zany Soft",
+                    "email": "info@zanysoft.net"
+                }
+            ],
+            "description": "Cpanel's API",
+            "keywords": [
+                "CPanel API",
+                "cpanel",
+                "laravel",
+                "laravel9",
+                "whm"
+            ],
+            "support": {
+                "issues": "https://github.com/zanysoft/cpanel-api/issues",
+                "source": "https://github.com/zanysoft/cpanel-api/tree/v3.2"
+            },
+            "time": "2023-02-16T05:42:08+00:00"
         }
     ],
     "packages-dev": [

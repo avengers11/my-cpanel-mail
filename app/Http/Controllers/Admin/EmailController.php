@@ -8,12 +8,86 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
+use ZanySoft\Cpanel\Cpanel;
 
 class EmailController extends Controller
 {
     //email
     public function email()
     {
+        // cPanel API URL
+        $cpanelUrl = 'https://ultra.whiteregistrar.com:2083/execute/Email/add_pop';
+
+        // Your cPanel username and password (preferably store in .env)
+        $cpanelUsername = env('CPANEL_USERNAME');
+        $cpanelPassword = env('CPANEL_PASSWORD'); // You can also use the API token here
+
+        // Data for the new email account
+        $email = 'newuse3ssa2er'; // Email username (e.g., newuser@yourdomain.com)
+        $password = 'passwor3wd123'; // Email account password
+        $domain = env('EMAIL_DOMAIN'); // Your domain name
+        $quota = 1024; // Optional: Email account quota in MB
+
+        // Make the HTTP POST request using Basic Authentication (username and password)
+        $response = Http::withBasicAuth($cpanelUsername, $cpanelPassword)
+            ->asForm()
+            ->post($cpanelUrl, [
+                'email' => $email,
+                'password' => $password,
+                'domain' => $domain,
+                'quota' => $quota,
+            ]);
+
+        // Check if the request was successful
+        if ($response->successful()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email account created successfully.',
+                'data' => $response->json(),
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to create email account.',
+                'error' => $response->body(),
+            ]);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return "ss";
+
         $user = auth()->user();
 
         $emails = CpanelEmailAccount::latest()->where("user_id", $user->id)->paginate(20);
@@ -40,10 +114,8 @@ class EmailController extends Controller
             return redirect(route("admin.email.index"))->with("error", "This email already exists!");
         }
         
-        $response = $this->createEmailAccount($username, $password);
-        $response2 = $this->forwardEmail($emailAddress);
-
-        return [$response, $response2];
+        $this->createEmailAccount($username, $password);
+        $this->forwardEmail($emailAddress);
         
         $emailAccount = new CpanelEmailAccount();
         $emailAccount->email = $emailAddress;
