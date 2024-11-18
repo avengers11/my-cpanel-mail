@@ -28,8 +28,8 @@ class EmailController extends Controller
         // Data for the new email account
         $email = 'mr12'; // Email username (e.g., newuser@yourdomain.com)
         $password = 'paqssworqq3wd123'; // Email account password
-        $domain = env('EMAIL_DOMAIN'); // Your domain name
-        $quota = 1024; // Optional: Email account quota in MB
+        $domain = $user->domain; // Your domain name
+        $quota = 256; // Optional: Email account quota in MB
 
         // Make the HTTP POST request using Basic Authentication (username and password)
         $response = Http::withBasicAuth($cpanelUsername, $cpanelPassword)
