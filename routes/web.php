@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\CardController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailController;
 use Illuminate\Support\Facades\Route;
@@ -44,5 +45,10 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
         Route::get('/add', 'add')->name('add');
         Route::post('/add', 'addSubmit')->name('addSubmit');
         Route::get('/delete/{email}', 'delete')->name('delete');
+    });
+
+    // cards 
+    Route::controller(CardController::class)->name("card.")->prefix('card')->group(function() {
+        Route::get('/', 'card')->name('index');
     });
 });

@@ -22,8 +22,8 @@
     <div class="authentication-theme auth-style_1">
       <div class="row">
         <div class="col-12 logo-section">
-          <a href="../../index.html" class="logo">
-            <img src="{{ url("/") }}/admin_assets/images/logo.svg" alt="logo" />
+          <a href="" class="logo">
+            <img src="{{ asset("logo/logo.png") }}" alt="logo" />
           </a>
         </div>
       </div>

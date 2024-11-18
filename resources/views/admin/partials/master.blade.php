@@ -24,8 +24,9 @@
     <!-- partial:partials/_header.html -->
     <nav class="t-header">
       <div class="t-header-brand-wrapper">
-          <a href="">
-              <img class="logo" src="{{ url("/") }}/admin_assets/images/logo.svg" alt=""> <img class="logo-mini" src="{{ url("/") }}/admin_assets/images/logo_mini.svg" alt="">
+          <a href="" class="d-none">
+              <img class="logo" src="{{ asset("logo/logo.png") }}" alt="">
+              <img class="logo-mini" src="{{ url("/") }}/admin_assets/images/logo_mini.svg" alt="">
           </a>
       </div>
       <div class="t-header-content-wrapper">
@@ -173,11 +174,11 @@
         <div class="sidebar">
             <div class="user-profile">
                 <div class="display-avatar animated-avatar">
-                    <img class="profile-img img-lg rounded-circle" src="{{ url("/") }}/admin_assets/images/profile/male/image_1.png" alt="profile image">
+                    <img class="profile-img img-lg rounded-circle" src="{{ asset("logo/logo.png") }}" alt="profile image">
                 </div>
                 <div class="info-wrapper">
-                    <p class="user-name">Allen Clerk</p>
-                    <h6 class="display-income">$3,400,00</h6>
+                    <p class="user-name">{{ auth()->user()->name }}</p>
+                    <h6 class="display-income">{{ auth()->user()->email }}</h6>
                 </div>
             </div>
             <ul class="navigation-menu">
@@ -191,6 +192,12 @@
                 <li @if(Route::is("admin.email.index")) class="active" @endif>
                     <a href="{{ route("admin.email.index") }}">
                         <span class="link-title">Email</span>
+                        <i class="mdi mdi-clipboard-outline link-icon"></i>
+                    </a>
+                </li>
+                <li @if(Route::is("admin.card.index")) class="active" @endif>
+                    <a href="{{ route("admin.card.index") }}">
+                        <span class="link-title">Card Generator</span>
                         <i class="mdi mdi-clipboard-outline link-icon"></i>
                     </a>
                 </li>

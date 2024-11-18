@@ -32,7 +32,7 @@ class EmailController extends Controller
     {
         $emailAddress = $request->input('email') . "@" . auth()->user()->domain;
         $username = $request->input('email');
-        $password = "Mr13@trSg2s";
+        $password = "Mkyt82HsD452Gs";//$this->generateRandomEmail();
 
         // check 
         if(CpanelEmailAccount::where("email", $emailAddress)->exists()){
@@ -55,8 +55,6 @@ class EmailController extends Controller
     public function delete(CpanelEmailAccount $email)
     {
         $email->delete();
-        $this->deleteEmailAccount($email);
-
         return redirect(route("admin.email.index"))->with("success", "Your email successfully deleted!");
     }
 
@@ -119,7 +117,7 @@ class EmailController extends Controller
             ];
         }
     }
-    public function deleteEmailAccount($email)
+    private function deleteEmailAccount($email)
     {
         $user = Auth::user();
 
@@ -130,6 +128,17 @@ class EmailController extends Controller
             'domain' => $user->domain,
             'email' => $email,
         ]);
+    }
+    private function generateRandomEmail() {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $textLength = rand(5, 10); // Random length for the text part
+        $textPart = '';
+        for ($i = 0; $i < $textLength; $i++) {
+            $textPart .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        $numberPart = rand(100, 999);
+        $randomEmail = $textPart . $numberPart;
+        return strtolower($randomEmail);
     }
 
 }
