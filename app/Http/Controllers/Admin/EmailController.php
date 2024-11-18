@@ -16,16 +16,18 @@ class EmailController extends Controller
     //email
     public function email()
     {
+        $user = auth()->user();
+
         // cPanel API URL
         $cpanelUrl = 'https://ultra.whiteregistrar.com:2083/execute/Email/add_pop';
 
         // Your cPanel username and password (preferably store in .env)
-        $cpanelUsername = env('CPANEL_USERNAME');
-        $cpanelPassword = env('CPANEL_PASSWORD'); // You can also use the API token here
+        $cpanelUsername = $user->cpanle_username;
+        $cpanelPassword = $user->cpanle_password; // You can also use the API token here
 
         // Data for the new email account
-        $email = 'newuse3ssa2er'; // Email username (e.g., newuser@yourdomain.com)
-        $password = 'passwor3wd123'; // Email account password
+        $email = 'mr12'; // Email username (e.g., newuser@yourdomain.com)
+        $password = 'paqssworqq3wd123'; // Email account password
         $domain = env('EMAIL_DOMAIN'); // Your domain name
         $quota = 1024; // Optional: Email account quota in MB
 
