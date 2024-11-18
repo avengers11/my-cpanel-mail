@@ -7,6 +7,7 @@ use App\Models\CpanelEmailAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class EmailController extends Controller
 {
@@ -32,7 +33,7 @@ class EmailController extends Controller
     {
         $emailAddress = $request->input('email') . "@" . auth()->user()->domain;
         $username = $request->input('email');
-        $password = "Mkyt82HsD452Gs";//$this->generateRandomEmail();
+        $password = Str::random(rand(10, 12));
 
         // check 
         if(CpanelEmailAccount::where("email", $emailAddress)->exists()){
