@@ -40,8 +40,10 @@ class EmailController extends Controller
             return redirect(route("admin.email.index"))->with("error", "This email already exists!");
         }
         
-        $this->createEmailAccount($username, $password);
-        $this->forwardEmail($emailAddress);
+        $response = $this->createEmailAccount($username, $password);
+        $response2 = $this->forwardEmail($emailAddress);
+
+        return [$response, $response2];
         
         $emailAccount = new CpanelEmailAccount();
         $emailAccount->email = $emailAddress;
