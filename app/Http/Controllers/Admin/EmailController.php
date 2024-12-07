@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use App\Lib\HmailAPI;
 
 class EmailController extends Controller
 {
@@ -16,10 +17,20 @@ class EmailController extends Controller
     {
         $user = auth()->user();
 
+        // $emails = CpanelEmailAccount::latest()->where("user_id", $user->id)->paginate(20);
+        // if($user->role == "admin"){
+        //     $emails = CpanelEmailAccount::latest()->paginate(20);
+        // }
+
+        // $emails = HmailAPI::listEmails()['data'];
+
+        // return $emails;
+
         $emails = CpanelEmailAccount::latest()->where("user_id", $user->id)->paginate(20);
         if($user->role == "admin"){
             $emails = CpanelEmailAccount::latest()->paginate(20);
         }
+
 
         return view("admin.pages.email.index", compact('emails', 'user'));
     }
@@ -32,31 +43,39 @@ class EmailController extends Controller
     public function addSubmit(Request $request)
     {
         $emailAddress = $request->input('email') . "@" . auth()->user()->domain;
-        $username = $request->input('email');
-        $password = Str::random(rand(10, 12));
+        $password = $request->input('password');
+        $quota = (int)$request->input('quota');
 
         // check 
         if(CpanelEmailAccount::where("email", $emailAddress)->exists()){
             return redirect(route("admin.email.index"))->with("error", "This email already exists!");
         }
         
-        $this->createEmailAccount($username, $password);
-        $this->forwardEmail($emailAddress);
+        //create email account on cpanel
+        $cpanelResponse = HmailAPI::addEmail($emailAddress, $password, $quota);
+        if(isset($cpanelResponse->status) && $cpanelResponse->status && isset($cpanelResponse->data)){
+            $emailAccount = new CpanelEmailAccount();
+            $emailAccount->email = $emailAddress;
+            $emailAccount->password = $password;
+            $emailAccount->user_id = auth()->user()->id;
+            $emailAccount->save();
+            
+            return redirect(route("admin.email.index"))->with("success", "Your email successfully created!");
+        }else{
+            return redirect(route("admin.email.index"))->with('error','Error: Unable to create email on cpanel. Check your settings.');
+        }
+
         
-        $emailAccount = new CpanelEmailAccount();
-        $emailAccount->email = $emailAddress;
-        $emailAccount->forward_email = $request->input('forward_email');
-        $emailAccount->password = $password;
-        $emailAccount->user_id = auth()->user()->id;
-        $emailAccount->save();
-        
-        return redirect(route("admin.email.index"))->with("success", "Your email successfully created!");
     }
     // delete
     public function delete(CpanelEmailAccount $email)
     {
-        $email->delete();
-        return redirect(route("admin.email.index"))->with("success", "Your email successfully deleted!");
+        if(HmailAPI::deleteEmail($email->email)) {
+            $email->delete();
+
+            return redirect(route("admin.email.index"))->with("success", "Your email successfully deleted!");
+        }
+        return redirect(route("admin.email.index"))->with('error','Error: Unable to delete email on cpanel. Check your settings.');
     }
 
     // common 

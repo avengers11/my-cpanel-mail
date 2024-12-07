@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string("email")->nullable();
             $table->string("password")->nullable();
-            $table->string("forward_email")->nullable();
             $table->integer("user_id")->nullable();
             $table->timestamps();
         });

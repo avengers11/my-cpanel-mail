@@ -206,10 +206,8 @@
         </div>
 
         <div class="page-content-wrapper">
-            <div class="page-content-wrapper-inner">
-                <div class="content-viewport">
-                    @yield('master')
-                </div>
+            <div class="content-viewport">
+                @yield('master')
             </div>
         </div>
     </div>

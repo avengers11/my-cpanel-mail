@@ -29,7 +29,11 @@ function generateRandomEmail() {
                     </div>
                     <div class="form-group">
                         <label for="inputPassword1">Password</label>
-                        <input type="text" id="forward-email" name="forward_email" class="form-control custom-input" placeholder="Enter forward email" value="{{ auth()->user()->forward_email }}" />
+                        <input type="text" id="forward-email" name="password" class="form-control custom-input" placeholder="Enter password" value="{{ \Str::random(rand(10, 12)) }}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputQuota1">Quota</label>
+                        <input type="number" id="forward-email" name="quota" class="form-control custom-input" placeholder="Enter Quota" value="{{ env('CPANEL_QUOTA') }}" />
                     </div>
                     <button type="submit" class="btn btn-sm btn-primary">Confirmed</button>
                     <a type="submit" class="btn btn-sm btn-danger" href="{{ route("admin.email.index") }}">Back</a>

@@ -29,13 +29,33 @@
                                     <th >User</th>
                                 @endif
                                 <th>Email</th>
-                                <th>Forward Mail</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($emails as $email)
+                                @php
+                                    $createdAt = $email->created_at;
+
+                                    // Calculate the time differences
+                                    $now = \Carbon\Carbon::now();
+                                    $diffInMinutes = $now->diffInMinutes($createdAt);
+                                    $diffInHours = $now->diffInHours($createdAt);
+                                    $diffInDays = $now->diffInDays($createdAt);
+                                    $diffInYears = $now->diffInYears($createdAt);
+
+                                    // Determine the display logic
+                                    if ($diffInMinutes < 60) {
+                                        $display = "{$diffInMinutes}m ago";
+                                    } elseif ($diffInHours < 24) {
+                                        $display = "{$diffInHours}h " . ($diffInMinutes % 60) . "m ago";
+                                    } elseif ($diffInDays < 30) {
+                                        $display = "{$diffInDays}d " . ($diffInHours % 24) . "h ago";
+                                    } else {
+                                        $display = "{$diffInDays}d {$diffInYears}y ago";
+                                    }
+                                @endphp
                                 <tr>
                                     @if ($user->role == "admin")
                                         <td>
@@ -50,15 +70,28 @@
                                     <td>
                                         <small>{{ $email->email }}</small>
                                     </td>
-                                    <td>{{ $email->forward_email }}</td>
-                                    <td>{{ $email->created_at }}</td>
+                                    <td>{{ $display }}</td>
                                     <td>
                                         <div class="actions">
+                                            <a target="_BLANK" href="https://mail.masudrana.top?email={{ $email->email }}&password={{ $email->password }}" class="btn btn-outline-success btn-rounded">Inbox</a>
                                             <a href="{{ route("admin.email.delete", $email) }}" class="btn btn-outline-danger btn-rounded" onclick="return confirm('Are you sure?')">Delete</a>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
+                            @if (count($emails) < 1)
+                                <tr>
+                                    @if ($user->role == "admin")
+                                        <td colspan="4">
+                                            <p class="text-danger text-center">No data found!</p>
+                                        </td>
+                                    @else
+                                        <td colspan="3">
+                                            <p class="text-danger text-center">No data found!</p>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
