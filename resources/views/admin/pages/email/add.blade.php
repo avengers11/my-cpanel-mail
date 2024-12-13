@@ -1,6 +1,6 @@
 @extends('admin.partials.master')
-
 @section('master')
+
 <?php
 function generateRandomEmail() {
     $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -42,4 +42,25 @@ function generateRandomEmail() {
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.bootstrap5.js"></script>
+
+<script>
+    $(document).ready(()=>{
+        // tabel
+        $('#email-table').DataTable({
+            "columnDefs": [
+                { "width": "25%", "targets": 0 },
+                { "width": "10%", "targets": 1 },
+                { "width": "15%", "targets": 2 },
+                { "width": "15%", "targets": 3 },
+                { "width": "20%", "targets": 4 },
+            ],
+            "pageLength": 10
+        });
+    });
+</script>
 @endsection

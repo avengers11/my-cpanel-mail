@@ -13,6 +13,7 @@
                 <div class="form-group">
                     <label for="inputEmail1">Generated Cards</label>
                     <textarea id="generated_card" cols="30" rows="10" class="form-control custom-input"></textarea>
+                    <p id="card_length">Total cards: <span>0</span></p>
                 </div>
                 
                 <button type="submit" class="btn btn-sm btn-success" id="card_generate"><i class="mdi mdi mdi-autorenew mr-2"></i> Generate</button>

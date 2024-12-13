@@ -1,5 +1,9 @@
 @extends('admin.partials.master')
 
+@push('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.0/css/dataTables.bootstrap5.css" />
+@endpush
+
 @section('master')
     <div class="row">
 
@@ -22,7 +26,7 @@
                     <p class="card-title ml-n1">Order History</p>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover table-sm">
+                    <table class="table table-hover table-sm" id="email-table">
                         <thead>
                             <tr class="solid-header">
                                 @if ($user->role == "admin")
@@ -102,3 +106,19 @@
         </div>
     </div>
 @endsection
+
+
+@push('js')
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.0/js/dataTables.bootstrap5.js"></script>
+
+<script>
+    $(document).ready(()=>{
+        // tabel
+        $('#email-table').DataTable({
+            "pageLength": 10,
+            "ordering": false
+        });
+    });
+</script>
+@endpush
