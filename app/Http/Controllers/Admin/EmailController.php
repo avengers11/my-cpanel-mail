@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Lib\HmailAPI;
 use App\Models\CpanelEmailAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use App\Lib\HmailAPI;
 
 class EmailController extends Controller
 {
@@ -17,20 +17,20 @@ class EmailController extends Controller
     {
         $user = auth()->user();
 
-        // $emails = CpanelEmailAccount::latest()->where("user_id", $user->id)->paginate(20);
-        // if($user->role == "admin"){
-        //     $emails = CpanelEmailAccount::latest()->paginate(20);
-        // }
-
-        // $emails = HmailAPI::listEmails()['data'];
-
-        // return $emails;
-
-        $emails = CpanelEmailAccount::latest()->where("user_id", $user->id)->paginate(20);
-        if($user->role == "admin"){
-            $emails = CpanelEmailAccount::latest()->paginate(20);
+        $dbEmails = CpanelEmailAccount::latest()->get(['email', 'id', 'password'])->keyBy('email');
+        $cpanelEmails = HmailAPI::listEmails()['data'];
+        
+        $emails = [];
+        foreach ($cpanelEmails as $index=>$value) {
+            $email = $value['email'];
+            $emails[] = [
+                "mtime" => $value['mtime'],
+                "id" => $dbEmails[$email]->id ?? null,
+                "email" => $email,
+                "password" => $dbEmails[$email]->password ?? null,
+                "created_at" => date("Y-m-d H:i:s", $value['mtime'])
+            ];
         }
-
 
         return view("admin.pages.email.index", compact('emails', 'user'));
     }
@@ -67,15 +67,35 @@ class EmailController extends Controller
 
         
     }
-    // delete
-    public function delete(CpanelEmailAccount $email)
+    // generate
+    public function generate(Request $req)
     {
-        if(HmailAPI::deleteEmail($email->email)) {
-            $email->delete();
+        $email = $req->email;
+        $password = Str::random(rand(10, 12));
+        if(HmailAPI::updateEmailPassword($email, $password)){
+            $emailAccount = new CpanelEmailAccount();
+            $emailAccount->email = $email;
+            $emailAccount->password = $password;
+            $emailAccount->user_id = auth()->user()->id;
+            $emailAccount->save();
 
-            return redirect(route("admin.email.index"))->with("success", "Your email successfully deleted!");
+            return redirect(url("https://mail.masudrana.top?email=$email&password=$password"));
         }
         return redirect(route("admin.email.index"))->with('error','Error: Unable to delete email on cpanel. Check your settings.');
+    }
+    // delete
+    public function delete(Request $req)
+    {
+        try {
+            if($req->id != null){
+                CpanelEmailAccount::find($req->id)->delete();
+            }
+            HmailAPI::deleteEmail($req->email);
+
+            return redirect(route("admin.email.index"))->with("success", "Your email successfully deleted!");
+        } catch (\Throwable $th) {
+            return redirect(route("admin.email.index"))->with('error','Error: Unable to delete email on cpanel. Check your settings.');
+        }
     }
 
     // common 

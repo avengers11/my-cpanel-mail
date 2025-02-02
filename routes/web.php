@@ -44,7 +44,8 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
         Route::get('/', 'email')->name('index');
         Route::get('/add', 'add')->name('add');
         Route::post('/add', 'addSubmit')->name('addSubmit');
-        Route::get('/delete/{email}', 'delete')->name('delete');
+        Route::get('/generate', 'generate')->name('generate');
+        Route::get('/delete', 'delete')->name('delete');
     });
 
     // cards 

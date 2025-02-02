@@ -29,10 +29,9 @@
                     <table class="table table-hover table-sm" id="email-table">
                         <thead>
                             <tr class="solid-header">
-                                @if ($user->role == "admin")
-                                    <th >User</th>
-                                @endif
+                                <th style="width: 0%; text:start"></th>
                                 <th>Email</th>
+                                <th>Password</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
@@ -40,7 +39,7 @@
                         <tbody>
                             @foreach ($emails as $email)
                                 @php
-                                    $createdAt = $email->created_at;
+                                    $createdAt = $email['created_at'];
 
                                     // Calculate the time differences
                                     $now = \Carbon\Carbon::now();
@@ -61,46 +60,32 @@
                                     }
                                 @endphp
                                 <tr>
-                                    @if ($user->role == "admin")
-                                        <td>
-                                            <small class="text-black font-weight-medium d-block">{{ $email->user->name }}</small>
-                                            <span class="text-gray">
-                                                <span class="status-indicator rounded-indicator small bg-primary"></span>
-                                                {{ $email->user->email }} 
-                                            </span> 
-                                        </td>
-                                    @endif
-    
-                                    <td>
-                                        <small>{{ $email->email }}</small>
-                                    </td>
+                                    <td><span class="d-none">{{ $email['mtime'] }}</span></td>
+                                    <td>{{ $email['email'] }}</td>
+                                    <td>{{ $email['password'] }}</td>
                                     <td>{{ $display }}</td>
                                     <td>
                                         <div class="actions">
-                                            <a target="_BLANK" href="https://mail.masudrana.top?email={{ $email->email }}&password={{ $email->password }}" class="btn btn-outline-success btn-rounded">Inbox</a>
-                                            <a href="{{ route("admin.email.delete", $email) }}" class="btn btn-outline-danger btn-rounded" onclick="return confirm('Are you sure?')">Delete</a>
+                                            @if ($email['password'] != null)
+                                                <a target="_BLANK" href="https://mail.masudrana.top?email={{ $email['email'] }}&password={{ $email['password'] }}" class="btn btn-outline-success btn-rounded">Inbox</a>
+                                            @else
+                                                <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-success btn-rounded">Generate</a>
+                                            @endif
+
+                                            <a href="{{ route("admin.email.delete", ["id" => $email['id'], "email" => $email['email']]) }}" class="btn btn-outline-danger btn-rounded" onclick="return confirm('Are you sure?')">Delete</a>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
                             @if (count($emails) < 1)
                                 <tr>
-                                    @if ($user->role == "admin")
-                                        <td colspan="4">
-                                            <p class="text-danger text-center">No data found!</p>
-                                        </td>
-                                    @else
-                                        <td colspan="3">
-                                            <p class="text-danger text-center">No data found!</p>
-                                        </td>
-                                    @endif
+                                    <td colspan="4">
+                                        <p class="text-danger text-center">No data found!</p>
+                                    </td>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
-                </div>
-                <div class="pagination mt-3">
-                    {{ $emails->links() }}
                 </div>
             </div>
         </div>
@@ -117,7 +102,7 @@
         // tabel
         $('#email-table').DataTable({
             "pageLength": 10,
-            "ordering": false
+            "order": [[0, "desc"]]
         });
     });
 </script>
