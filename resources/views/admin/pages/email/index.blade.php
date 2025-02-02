@@ -66,6 +66,8 @@
                                     <td>{{ $display }}</td>
                                     <td>
                                         <div class="actions">
+                                            <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-primary btn-rounded">New Password</a>
+
                                             @if ($email['password'] != null)
                                                 <a target="_BLANK" href="https://mail.masudrana.top?email={{ $email['email'] }}&password={{ $email['password'] }}" class="btn btn-outline-success btn-rounded">Inbox</a>
                                             @else
