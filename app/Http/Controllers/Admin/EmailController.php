@@ -73,6 +73,9 @@ class EmailController extends Controller
         $email = $req->email;
         $password = Str::random(rand(10, 12));
         if(HmailAPI::updateEmailPassword($email, $password)){
+            if(CpanelEmailAccount::where('email', $email)->exists()){
+                CpanelEmailAccount::where('email', $email)->delete();
+            }
             $emailAccount = new CpanelEmailAccount();
             $emailAccount->email = $email;
             $emailAccount->password = $password;
