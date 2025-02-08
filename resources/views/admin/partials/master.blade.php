@@ -6,9 +6,6 @@
     <title>Dashboard Template</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ url("/") }}/admin_assets/vendors/iconfonts/mdi/css/materialdesignicons.css">
-    <!-- endinject -->
-    <!-- vendor css for this page -->
-    <!-- End vendor css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ url("/") }}/admin_assets/css/shared/style.css">
     <!-- endinject -->

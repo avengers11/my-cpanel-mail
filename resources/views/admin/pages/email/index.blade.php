@@ -32,6 +32,7 @@
                                 <th style="width: 0%; text:start"></th>
                                 <th>Email</th>
                                 <th>Password</th>
+                                <th>Forward Mail</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
@@ -61,15 +62,27 @@
                                 @endphp
                                 <tr>
                                     <td><span class="d-none">{{ $email['mtime'] }}</span></td>
-                                    <td>{{ $email['email'] }}</td>
+                                    <td class="email">{{ $email['email'] }}</td>
                                     <td>{{ $email['password'] }}</td>
+                                    <td>
+                                        <button data-toggle="modal" data-target="#addNewForwardEmail" class="btn btn-outline-success btn-rounded add-new-forward-email">Add New</button>
+                                    </td>
                                     <td>{{ $display }}</td>
                                     <td>
                                         <div class="actions">
-                                            <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-primary btn-rounded">New Password</a>
+                                            {{-- <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-primary btn-rounded">New Password</a>
 
                                             @if ($email['password'] != null)
                                                 <a target="_BLANK" href="https://mail.masudrana.top?email={{ $email['email'] }}&password={{ $email['password'] }}" class="btn btn-outline-success btn-rounded">Inbox</a>
+                                            @else
+                                                <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-success btn-rounded">Generate</a>
+                                            @endif --}}
+
+                                            {{-- new  --}}
+                                            <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-primary btn-rounded">New Password</a>
+
+                                            @if ($email['password'] != null)
+                                                <a target="_BLANK" href="{{ route('admin.email.fetchEmails', ["email" => $email['email'], "password" => $email['password']]) }}" class="btn btn-outline-success btn-rounded">Inbox</a>
                                             @else
                                                 <a target="_BLANK" href="{{ route("admin.email.generate", ["email" => $email['email']]) }}" class="btn btn-outline-success btn-rounded">Generate</a>
                                             @endif
@@ -95,6 +108,36 @@
 @endsection
 
 
+<!-- Modal -->
+<div class="modal fade" id="addNewForwardEmail" tabindex="-1" aria-labelledby="addNewForwardEmailLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.email.addForwardSubmit') }}" method="post">
+                @csrf 
+                <input type="hidden" name="email" id="forward-mail">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNewForwardEmailLabel">Add New Forward Email</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Forward email...</label>
+                        <input type="email" name="email_forward" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 @push('js')
 <script src="https://cdn.datatables.net/2.0.0/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.0/js/dataTables.bootstrap5.js"></script>
@@ -105,6 +148,11 @@
         $('#email-table').DataTable({
             "pageLength": 10,
             "order": [[0, "desc"]]
+        });
+
+        $(".add-new-forward-email").click(function(){
+            let email = $(this).closest("tr").find(".email").text().trim();
+            $("#forward-mail").val(email);
         });
     });
 </script>

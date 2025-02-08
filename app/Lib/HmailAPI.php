@@ -123,7 +123,7 @@ class HmailAPI
             'fwdemail' => $email_forward,
             'domain' => self::domain()
         ]);
-        if(isset($resp->status) and $resp->status ){
+        if(isset($resp->status) and $resp->status){
             return true;
         }
         return false;
