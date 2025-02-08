@@ -82,9 +82,14 @@ h1 {
 .modal-body {
     margin-top: 20px;
     white-space: pre-wrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
 }
 #email-modal img{
-    width: 100% !important;
+    width: 100px !important;
 }
 .refresh{
     font-size: 14px;
