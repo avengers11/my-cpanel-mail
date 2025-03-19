@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\AmazonReviewController;
 use App\Http\Controllers\Admin\CardController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailController;
+use App\Http\Controllers\Admin\AudibleController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -32,6 +36,7 @@ Route::get('/', function () {
 Route::controller(AccountController::class)->group(function() {
     Route::get('/login', 'login')->name('login');
     Route::post('/login', 'loginSubmit')->name('loginSubmit');
+    Route::get('/logout', 'logoutSubmit')->name('logoutSubmit');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function () {
@@ -54,8 +59,50 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
         Route::any('/mark-as-read/{emailId}', 'markAsRead')->name('markAsRead');
     });
 
+    // // cards 
+    // Route::controller(CardController::class)->name("card.")->prefix('card')->group(function() {
+    //     Route::get('/', 'card')->name('index');
+
+    //     Route::any('/openBrowser-card', 'openBrowserCard')->name('openBrowser');
+    //     Route::any('/add-card', 'addCard')->name('add');
+    //     Route::get('/remove-card', 'removeCard')->name('remove');
+    //     Route::get('/remove-card-dynamic', 'removeCardDynamic')->name('removeDynamic');
+    //     Route::get('/amazon-order', 'amazonOrder')->name('amazonOrder');
+    //     Route::post('/amazon-order-submit', 'amazonOrderSubmit')->name('amazonOrderSubmit');
+
+    //     Route::get('/test-listner', 'listinerTest');
+    // });
+
     // cards 
     Route::controller(CardController::class)->name("card.")->prefix('card')->group(function() {
         Route::get('/', 'card')->name('index');
+
+        Route::any('/openBrowser-card', 'openBrowserCard')->name('openBrowser');
+        Route::any('/add-card', 'addCard')->name('add');
+        Route::get('/remove-card', 'removeCard')->name('remove');
+        Route::get('/remove-card-dynamic', 'removeCardDynamic')->name('removeDynamic');
+        Route::get('/remove-card-clear', 'removeCardClear')->name('removeClear');
+        Route::any('/get-cards', 'getCards')->name('getCards');
+
+        // order
+        Route::any('/amazon-order', 'amazonOrder')->name('amazonOrder');
+        Route::post('/amazon-order-save', 'amazonOrderSave')->name('amazonOrderSave');
+        Route::get('/amazon-order-submit', 'amazonOrderSubmit')->name('amazonOrderSubmit');
+    });
+
+    // amazon 
+    Route::controller(AmazonReviewController::class)->name("review.")->prefix('review')->group(function() {
+        Route::get('/', 'reviewAll')->name('all');
+        Route::any('/add-review', 'addReview')->name('addReview');
+        Route::get('/todays-task', 'todaysTask')->name('todaysTask');
+        Route::get('/completed-task', 'reviewcompletedTask')->name('completedTask');
+    });
+
+
+    // Audible 
+    Route::controller(AudibleController::class)->name("audible.")->prefix('audible')->group(function() {
+        Route::any('/', 'orderView')->name('orderView');
+        Route::post('/save', 'orderSave')->name('orderSave');
+        Route::get('/process', 'orderProcess')->name('orderProcess');
     });
 });

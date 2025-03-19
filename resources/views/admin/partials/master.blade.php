@@ -186,18 +186,76 @@
                         <i class="mdi mdi-gauge link-icon"></i>
                     </a>
                 </li>
-                <li @if(Route::is("admin.email.index")) class="active" @endif>
-                    <a href="{{ route("admin.email.index") }}">
-                        <span class="link-title">Email</span>
-                        <i class="mdi mdi-clipboard-outline link-icon"></i>
+                @if (\Auth::user()->role == "admin")
+                    <li @if(Route::is("admin.email.index")) class="active" @endif>
+                        <a href="{{ route("admin.email.index") }}">
+                            <span class="link-title">Email</span>
+                            <span class="mdi mdi-email-alert link-icon"></span>
+
+                        </a>
+                    </li>
+                    <li @if(Route::is("admin.card.index")) class="active" @endif>
+                        <a href="{{ route("admin.card.index") }}">
+                            <span class="link-title">Card Generator</span>
+                            <span class="mdi mdi-creation link-icon"></span>
+                        </a>
+                    </li>
+                    <li @if(Route::is("admin.card.add")) class="active" @endif>
+                        <a href="{{ route("admin.card.add") }}">
+                            <span class="link-title">Add Card</span>
+                            <span class="mdi mdi-credit-card link-icon"></span>
+                        </a>
+                    </li>
+                    <li @if(Route::is("admin.card.remove")) class="active" @endif>
+                        <a href="{{ route("admin.card.remove") }}">
+                            <span class="link-title">Remove Cards</span>
+                            <span class="mdi mdi-credit-card link-icon"></span>
+                        </a>
+                    </li>
+                    <li @if(Route::is("admin.card.amazonOrder")) class="active" @endif>
+                        <a href="{{ route("admin.card.amazonOrder") }}">
+                            <span class="link-title">Amazon Order</span>
+                            <span class="mdi mdi-cart-arrow-down link-icon"></span>
+                        </a>
+                    </li>
+
+                    <li @if(Route::is("admin.audible.orderView")) class="active" @endif>
+                        <a href="{{ route("admin.audible.orderView") }}">
+                            <span class="link-title">Audible Order</span>
+                            <span class="mdi mdi-cart-arrow-down link-icon"></span>
+                        </a>
+                    </li>
+                @endif
+
+                <li>
+                    <a href="{{ route("admin.card.openBrowser") }}">
+                        <span class="link-title">Open Browser</span>
+                        <span class="mdi mdi-open-in-app link-icon"></span>
                     </a>
                 </li>
-                <li @if(Route::is("admin.card.index")) class="active" @endif>
-                    <a href="{{ route("admin.card.index") }}">
-                        <span class="link-title">Card Generator</span>
-                        <i class="mdi mdi-clipboard-outline link-icon"></i>
-                    </a>
-                </li>
+
+                @if (\Auth::user()->role == "review" || \Auth::user()->role == "admin")
+                    <li @if(Route::is("admin.review.all")) class="active" @endif>
+                        <a href="{{ route("admin.review.all") }}">
+                            <span class="link-title">All Review</span>
+                            <i class="mdi mdi-calendar-check link-icon"></i>
+                        </a>
+                    </li>
+
+                    <li @if(Route::is("admin.review.todaysTask")) class="active" @endif>
+                        <a href="{{ route("admin.review.todaysTask") }}">
+                            <span class="link-title">Today's Task</span>
+                            <span class="mdi mdi-checkbox-multiple-marked-circle-outline link-icon"></span>
+                        </a>
+                    </li>
+                    <li @if(Route::is("admin.review.completedTask")) class="active" @endif>
+                        <a href="{{ route("admin.review.completedTask") }}">
+                            <span class="link-title">Completed Task</span>
+                            <span class="mdi mdi-checkbox-multiple-marked-circle-outline link-icon"></span>
+                        </a>
+                    </li>
+                @endif
+                
             </ul>
             <div class="sidebar-upgrade-banner"></div>
         </div>

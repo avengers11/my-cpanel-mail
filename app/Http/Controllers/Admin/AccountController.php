@@ -27,4 +27,8 @@ class AccountController extends Controller
             return redirect(route('login'))->with('error', 'Your email/password is wrong!');
         }
     }
+
+    public function logoutSubmit(){
+        Auth::logout();
+    }
 }

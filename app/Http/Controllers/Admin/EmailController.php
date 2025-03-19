@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
 use Webklex\PHPIMAP\ClientManager;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\DomCrawler\Crawler;
 
 class EmailController extends Controller
 {
@@ -35,6 +37,19 @@ class EmailController extends Controller
         }
 
         return view("admin.pages.email.index", compact('emails', 'user'));
+    }
+
+    // amazon
+    public function amazon()
+    {
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'https://www.amazon.com/Japan-Travel-Guide-2025-Budget-Friendly-ebook/product-reviews/B0DNB1SHNL/ref=cm_cr_getr_d_paging_btm_next_3?ie=UTF8&reviewerType=all_reviews&sortBy=recent&pageNumber=1');
+
+        $crawler = new Crawler($response->getContent());
+        return $crawler;
+        
+        $tableData = $crawler->filter('#cm_cr-review_list .a-unordered-list.a-nostyle.a-vertical')->text();
+        return $tableData;
     }
 
     // add
