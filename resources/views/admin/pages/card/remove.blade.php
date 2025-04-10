@@ -84,21 +84,10 @@
     $("#removeid").click(function(){
         if($("#removeid span").text() == "Submit"){
             $("#removeid span").text("Running...");
-
-            let amazon_id = $("#amazon_id").val();
-            eventSource = new EventSource(`/admin/card/remove-card-dynamic?amazon_id=${amazon_id}`);
-            eventSource.onmessage = function(event) {
-                console.log(event);
-                
-                $("#outputbox").prepend(`
-                <div class="card-wrapper">
-                    ${event.data}
-                </div>
-                `);
-            };
+            runEvent();
             eventSource.onerror = function() {
-                console.log("Connection closed or error occurred.");
                 eventSource.close();
+                runEvent();
             };
         }else{
             $("#removeid span").text("Submit");
@@ -108,5 +97,18 @@
             }
         }
     });
+
+    const runEvent = () => {
+        let amazon_id = $("#amazon_id").val();
+        eventSource = new EventSource(`/admin/card/remove-card-dynamic?amazon_id=${amazon_id}`);
+        eventSource.onmessage = function(event) {
+            $("#outputbox").prepend(`
+            <div class="card-wrapper">
+                ${event.data}
+            </div>
+            `);
+        };
+        $("#removeid span").text("Running...");
+    }
 </script>
 @endpush

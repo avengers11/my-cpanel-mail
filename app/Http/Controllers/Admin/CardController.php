@@ -18,7 +18,7 @@ class CardController extends Controller
     public $artisanPath;
     public function __construct()
     {
-        $this->phpPath = 'E:/Applications/laragon/bin/php/php-8.2.27-nts-Win32-vs16-x64/php.exe';
+        $this->phpPath = 'E:/Applications/laragon/bin/php/php8.2/php.exe';
         $this->artisanPath = 'E:/Applications/laragon/www/Laravel/63_cPanel_mail/artisan';
     }
 
@@ -40,8 +40,6 @@ class CardController extends Controller
     {
         if($request->isMethod("POST")){
             $name = $request->name;
-            $month = $request->month;
-            $year = $request->year;
             $amazon_id = $request->amazon_id;
             $cards = explode("\n", $request->cards);
 
@@ -54,7 +52,10 @@ class CardController extends Controller
 
                     // run job 
                     foreach ($cards2 as $key => $card) {
-                        
+                        $month = isset(explode("|", $card)[1]) ? explode("|", $card)[1] : $request->month;
+                        $year = isset(explode("|", $card)[2]) ? explode("|", $card)[2] : $request->year;
+                        $card = isset(explode("|", $card)[0]) ? explode("|", $card)[0] : $card;
+
                         $command = "$this->phpPath \"$this->artisanPath\" app:amazon-card-add \"$name\" \"$card\" \"$month\" \"$year\" \"$amazonAccount\" 2>&1"; // php artisan app:amazon-card-add "step" "5415141515151515" 12 2027 1
                         shell_exec($command);
                     }

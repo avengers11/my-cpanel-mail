@@ -89,7 +89,6 @@ Instant Pot
 KitchenAid Mixer
 Stanley Cup (Trending tumbler)
 YETI Cooler
-Nike Sneakers
 Fitbit
 GoPro Camera
 Echo Dot
@@ -150,11 +149,15 @@ Cheap audiobooks on Audible
                     </div>
 
                     <button class="btn btn-sm btn-primary" type="submit" id="submit_order"><i class="mdi mdi mdi-autorenew mr-2"></i> <span>Save Account</span></button>
-                    <button class="btn btn-sm btn-success" type="button" id="order_now"><i class="mdi mdi mdi-autorenew mr-2"></i> <span>Submit</span></button>
+                    <button class="btn btn-sm btn-success" type="button" id="order_now"><i class="mdi mdi-check mr-2"></i> <span>Start Order</span></button>
+                    <a href="{{ route("admin.audible.orderClear") }}" class="btn btn-sm btn-danger text-light"><span class="mdi mdi-close mr-2"></span> <span>Clear Disable Account</span></a>
                     
                     <div class="row mt-4">
                         <div class="col-12">
                             <div id="output">
+                                @foreach ($disables as $item)
+                                    <p style="color: red">{{ $item->email }}</p>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -212,18 +215,18 @@ const runEvent = () => {
     eventSource.onerror = function() {
         console.log("Turn Off");
         eventSource.close();
-        $("#order_now span").text("Submit");
+        $("#order_now span").text("Start Order");
     };
 }
 
 // order now 
 $("#order_now").click(function(){
     // click & run 
-    if($("#order_now span").text() == "Submit"){
+    if($("#order_now span").text() == "Start Order"){
         $("#order_now span").text("Running...");
         runEvent();
     }else{
-        $("#order_now span").text("Submit");
+        $("#order_now span").text("Start Order");
         if (eventSource) {
             eventSource.close();
             console.log("EventSource connection closed.");

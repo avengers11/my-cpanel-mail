@@ -104,5 +104,6 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
         Route::any('/', 'orderView')->name('orderView');
         Route::post('/save', 'orderSave')->name('orderSave');
         Route::get('/process', 'orderProcess')->name('orderProcess');
+        Route::get('/clear', 'orderClear')->name('orderClear');
     });
 });

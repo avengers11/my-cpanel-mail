@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AudibleOrderAccount;
+use App\Models\DisableAccount;
 use Illuminate\Http\Request;
 
 class AudibleController extends Controller
@@ -12,7 +13,7 @@ class AudibleController extends Controller
     public $artisanPath;
     public function __construct()
     {
-        $this->phpPath = 'E:/Applications/laragon/bin/php/php-8.2.27-nts-Win32-vs16-x64/php.exe';
+        $this->phpPath = 'E:/Applications/laragon/bin/php/php8.2/php.exe';
         $this->artisanPath = 'E:/Applications/laragon/www/Laravel/63_cPanel_mail/artisan';
     }
 
@@ -23,6 +24,7 @@ class AudibleController extends Controller
         $accountPasswords = AudibleOrderAccount::orderBy('id', 'ASC')->pluck("password");
         $accountNames = AudibleOrderAccount::orderBy('id', 'ASC')->pluck("name");
         $accountCards = AudibleOrderAccount::orderBy('id', 'ASC')->pluck("card_number");
+        $disables = DisableAccount::get();
 
         if($request->isMethod("POST")){
             return response()->json(["emails" => $accountEmails, "passwords" => $accountPasswords, "names" => $accountNames, "cards" => $accountCards]);
@@ -59,7 +61,7 @@ class AudibleController extends Controller
         // }
         
         
-        return view("admin.pages.audible.order", compact("accountNames", "accountEmails", "accountPasswords", "accountCards"));
+        return view("admin.pages.audible.order", compact("accountNames", "accountEmails", "accountPasswords", "accountCards", "disables"));
     }
     public function orderSave(Request $request)
     {
@@ -178,6 +180,22 @@ class AudibleController extends Controller
                 ob_flush();
                 flush();
 
+                // account status 
+                if($loginStatus == 2){
+                    sleep(1);
+                    // submit acc 
+                    $disable = new DisableAccount();
+                    $disable->email = $email;
+                    $disable->save();
+
+                    $account->delete();
+
+                    echo "data: [DONE]\n\n";
+                    ob_flush();
+                    flush();
+                    exit();
+                }
+                
                 // Exit loop if login is successful
                 if ($loginStatus === 1) {
                     break; 
@@ -430,5 +448,13 @@ class AudibleController extends Controller
     {
         $msg = trim($msg, '\'');
         return $msg;
+    }
+
+
+    // orderClear
+    public function orderClear()
+    {
+        DisableAccount::truncate();
+        return back()->with("msg", "Success");
     }
 }
